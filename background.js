@@ -1,4 +1,4 @@
-let browser = chrome || browser;
+const browser = chrome || browser;
 
 browser.runtime.onMessage.addListener(downloadPhoto);
 

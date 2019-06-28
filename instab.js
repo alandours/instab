@@ -32,6 +32,10 @@ const addButtons = (media) => {
 
             mediaContainer.classList.add('instab-container');
 
+            if(instabId !== 0){
+                mediaContainer.classList.add(`instab-container-${instabId}`);
+            }
+
             mediaContainer.appendChild(openBtn);
             mediaContainer.appendChild(saveBtn);
 
@@ -67,24 +71,66 @@ const addInstab = () => {
 const addInstabToNewPosts = () => {
 
     const images = getLargeImages();
-    const mainContainer = images[0].closest('article').parentNode;
 
-    let observer = new MutationObserver(addInstab);
-    const config = { childList: true };
+    if(images.length > 0){
 
-    observer.observe(mainContainer, config);
-    
+        const mainContainer = images[0].closest('article').parentNode;
+
+        const config = { childList: true };
+
+        postsObserver.observe(mainContainer, config);
+
+    }
+
 }
 
-let browser = chrome || browser;
+const browser = chrome || browser;
+
+const postsObserver = new MutationObserver(addInstab);
+const storiesObserver = new MutationObserver(addInstab);
 
 const body = document.getElementsByTagName('body')[0];
 
+let instabId = 0;
+
 body.addEventListener('click', () => {
 
-    setTimeout(() => {
+    instabId = new Date().getTime();
+
+    let tries = 0
+
+    const instabExists = setInterval(() => {
+
+        tries++
+
         addInstab();
-    }, 500);
+
+        if(document.querySelector(`.instab-container-${instabId}`) || tries > 5){
+
+            clearInterval(instabExists);
+
+            instabId = 0;
+
+        }
+
+    }, 300);
+
+    
+    setTimeout(() => {
+    
+        const storiesContainer = document.querySelector('.yS4wN');
+
+        if(storiesContainer !== null){
+
+            storiesObserver.observe(storiesContainer, { subtree: true, childList: true });
+
+        }else{
+
+            storiesObserver.disconnect();
+
+        }
+
+    }, 2000);
 
 });
 
@@ -99,7 +145,3 @@ for(let i = 0; i < navbar.length; i++){
 addInstabToNewPosts();
 
 addInstab();
-
-
-
-
