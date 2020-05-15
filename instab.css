@@ -1,4 +1,4 @@
-.instab-btn{
+.instab-btn {
     background: #fff;
     color: #000;
     border: 1px solid #000;
@@ -14,14 +14,14 @@
     opacity: 0;
     transition: ease 500ms;
     cursor: pointer;
-    z-index: 10;
+    z-index: 20;
 }
 
-.instab-btn:visited{
+.instab-btn:visited {
     color: #000;
 }
 
-.instab-save{
+.instab-save {
     right: 15px;
 }
 
@@ -29,15 +29,15 @@
     right: 125px;
 }
 
-.instab-container:hover .instab-btn{
+.instab-container:hover .instab-btn, article > div:hover .instab-btn {
     opacity: 1;
     transition: ease 500ms;
 }
 
-.instab-navbar{
+.instab-navbar {
     z-index: 100;
 }
 
-section.instab-container > .instab-btn{
+section.instab-container > .instab-btn {
     display: none;
 }
