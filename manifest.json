@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "Instab",
   "description": "Open and save Instagram photos, videos and stories.",
-  "version": "1.0.2",
+  "version": "1.1",
 
   "permissions": [
     "activeTab",
@@ -23,8 +23,17 @@
   "content_scripts": [
     {
       "matches": ["*://*.instagram.com/*"],
-      "js": ["instab.js"],
-      "css": ["instab.css"]
+      "js": ["js/main.js"],
+      "css": ["css/instab.css"]
+    },
+    {
+      "matches": ["*://*.instagram.com/p/*"],
+      "js": ["js/post.js"]
+    },
+    {
+      "matches": ["*://*.instagram.com/*"],
+      "exclude_globs": ["*instagram.com/p/*"],
+      "js": ["js/feed.js"]
     }
   ]
 

@@ -1,21 +1,29 @@
+const createOpenBtn = (source) => {
+  const openBtn = document.createElement('a');
+  openBtn.className = 'instab-btn instab-open';
+  openBtn.innerHTML = 'Open';
+  openBtn.target = '_blank';
+  openBtn.href = source;
+
+  return openBtn;
+};
+
+const createSaveBtn = (source) => {
+  const saveBtn = document.createElement('a');
+  saveBtn.className = 'instab-btn instab-save';
+  saveBtn.innerHTML = 'Save';
+
+  saveBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    browser.runtime.sendMessage(source);
+  });
+
+  return saveBtn;
+};
+
 const addButtons = (media) => {
   for (let i = 0; i < media.length; i++) {
-    const source = (media[i].src == '') ? media[i].getElementsByTagName('source')[0].src /* (For videos on stories) */ : media[i].src;
-
-    const openBtn = document.createElement('a');
-    openBtn.className = 'instab-btn instab-open';
-    openBtn.innerHTML = 'Open';
-    openBtn.target = '_blank';
-    openBtn.href = source;
-
-    const saveBtn = document.createElement('a');
-    saveBtn.className = 'instab-btn instab-save';
-    saveBtn.innerHTML = 'Save';
-
-    saveBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      browser.runtime.sendMessage(source);
-    });
+    const source = media[i].src || media[i].getElementsByTagName('source')[0].src; //For videos on stories
 
     const mediaContainer = media[i].parentNode.parentNode;
 
@@ -24,6 +32,9 @@ const addButtons = (media) => {
 
       if (instabId !== 0)
         mediaContainer.classList.add(`instab-container-${instabId}`);
+
+      const openBtn = createOpenBtn(source);
+      const saveBtn = createSaveBtn(source);
 
       mediaContainer.appendChild(openBtn);
       mediaContainer.appendChild(saveBtn);
@@ -44,13 +55,12 @@ const addInstab = () => {
   if (images.length) addButtons(images);
 };
 
-const addInstabToNewPosts = () => {
+const addPostsObserver = () => {
   const images = getLargeImages();
 
   if (images.length) {
     const feed = images[0].closest('article').parentNode;
-    const config = { childList: true };
-    postsObserver.observe(feed, config);
+    postsObserver.observe(feed, { subtree: true, childList: true });
   }
 };
 
@@ -65,7 +75,6 @@ const handleClickPosts = () => {
     const instabContainer = document.querySelector(`.instab-container-${instabId}`);
 
     addInstab();
-    addInstabToNewPosts();
 
     if (instabContainer || tries > 5) {
       clearInterval(instabExists);
@@ -92,16 +101,12 @@ const handleClickStories = () => {
   }, 300);
 };
 
-const browser = chrome || browser;
-
 const postsObserver = new MutationObserver(addInstab);
 const storiesObserver = new MutationObserver(addInstab);
 
-const body = document.getElementsByTagName('body')[0];
-
 let instabId = 0;
 
-body.addEventListener('click', () => {
+document.body.addEventListener('click', () => {
   handleClickPosts();
   handleClickStories();
 });
@@ -111,7 +116,3 @@ const navbar = document.getElementsByTagName('nav');
 for (let i = 0; i < navbar.length; i++) {
   navbar[i].classList.add('instab-navbar');
 }
-
-addInstabToNewPosts();
-
-addInstab();
