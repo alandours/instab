@@ -101,6 +101,8 @@ const handleClickStories = () => {
   }, 300);
 };
 
+const browser = chrome || browser;
+
 const postsObserver = new MutationObserver(addInstab);
 const storiesObserver = new MutationObserver(addInstab);
 
