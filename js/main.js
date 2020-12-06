@@ -22,8 +22,10 @@ const createSaveBtn = (source) => {
 };
 
 const addButtons = (media) => {
+  const isStory = /stories/.test(window.location.href);
+
   for (let i = 0; i < media.length; i++) {
-    const source = media[i].src || media[i].getElementsByTagName('source')[0].src; //For videos on stories
+    const source = (isStory ? media[i].currentSrc : media[i].src) || media[i].getElementsByTagName('source')[0].src; //For videos on stories
 
     const mediaContainer = media[i].parentNode.parentNode;
 
@@ -89,11 +91,11 @@ const handleClickStories = () => {
   const storiesInterval = setInterval(() => {
     tries++;
 
-    const storiesContainer = document.querySelector('.yS4wN');
+    const isStory = /stories/.test(window.location.href);
 
-    if (storiesContainer) {
+    if (isStory) {
       addInstab();
-      storiesObserver.observe(storiesContainer, { subtree: true, childList: true });
+      storiesObserver.observe(document.body, { subtree: true, childList: true });
       clearInterval(storiesInterval);
     } else if (tries > 15) {
       clearInterval(storiesInterval);
