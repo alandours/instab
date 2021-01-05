@@ -22,15 +22,21 @@ const createSaveBtn = (source) => {
 };
 
 const addButtons = (media) => {
-  const isStory = /stories/.test(window.location.href);
-
   for (let i = 0; i < media.length; i++) {
-    const source = (isStory ? media[i].currentSrc : media[i].src) || media[i].getElementsByTagName('source')[0].src; //For videos on stories
+    let source = media[i].src;
+
+    if (isStory()) {
+      const srcset = media[i].srcset;
+      source = srcset ? srcset.split(',')[0] : media[i].getElementsByTagName('source')[0].src; //For videos on stories
+    }
 
     const mediaContainer = media[i].parentNode.parentNode;
 
-    if (!mediaContainer.classList.contains('instab-container')) {
+    if (source && !mediaContainer.classList.contains('instab-container')) {
       mediaContainer.classList.add('instab-container');
+
+      if (isStory())
+        mediaContainer.classList.add('instab-container-stories');
 
       if (instabId !== 0)
         mediaContainer.classList.add(`instab-container-${instabId}`);
@@ -44,9 +50,15 @@ const addButtons = (media) => {
   }
 };
 
+const isLargerThan350 = (img) => {
+  const { width } = isStory() ? img.getBoundingClientRect() : img;
+  return width > 350;
+};
+
 const getLargeImages = () => {
   const images = document.getElementsByTagName('img');
-  return images.length ? [...images].filter(img => img.width > 350) : [];
+
+  return images.length ? [...images].filter(isLargerThan350) : [];
 };
 
 const addInstab = () => {
@@ -57,62 +69,38 @@ const addInstab = () => {
   if (images.length) addButtons(images);
 };
 
-const addPostsObserver = () => {
-  const images = getLargeImages();
-
-  if (images.length) {
-    const feed = images[0].closest('article').parentNode;
-    postsObserver.observe(feed, { subtree: true, childList: true });
-  }
-};
-
-const handleClickPosts = () => {
-  let tries = 0
-
-  instabId = new Date().getTime();
-
-  const instabExists = setInterval(() => {
-    tries++
-
-    const instabContainer = document.querySelector(`.instab-container-${instabId}`);
-
-    addInstab();
-
-    if (instabContainer || tries > 5) {
-      clearInterval(instabExists);
-      instabId = 0;
-    }
-  }, 300);
-};
-
-const handleClickStories = () => {
+const handleClick = () => {
   let tries = 0;
 
-  const storiesInterval = setInterval(() => {
+  const interval = setInterval(() => {
     tries++;
 
-    const isStory = /stories/.test(window.location.href);
-
-    if (isStory) {
+    if (isStory()) {
       addInstab();
-      storiesObserver.observe(document.body, { subtree: true, childList: true });
-      clearInterval(storiesInterval);
-    } else if (tries > 15) {
-      clearInterval(storiesInterval);
+      instabObserver.observe(document.body, { subtree: true, childList: true });
+      clearInterval(interval);
+    } else {
+      instabId = new Date().getTime();
+  
+      const instabContainer = document.querySelector(`.instab-container-${instabId}`);
+      addInstab();
+  
+      if (instabContainer || tries > 15) {
+        clearInterval(interval);
+        instabId = 0;
+      }
     }
   }, 300);
-};
+}
 
 const browser = chrome || browser;
-
-const postsObserver = new MutationObserver(addInstab);
-const storiesObserver = new MutationObserver(addInstab);
-
+const isStory = () => /stories/.test(window.location.href);
 let instabId = 0;
 
+const instabObserver = new MutationObserver(addInstab);
+
 document.body.addEventListener('click', () => {
-  handleClickPosts();
-  handleClickStories();
+  handleClick();
 });
 
 const navbar = document.getElementsByTagName('nav');

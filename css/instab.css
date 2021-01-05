@@ -1,24 +1,24 @@
 .instab-btn {
-    background: #fafafa;
-    color: #000;
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.5);
-    border-radius: 3px;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: 500;
-    text-align: center;
-    width: 80px;
-    position: absolute;
-    top: 15px;
-    padding: 8px;
-    opacity: 0;
-    transition: ease 500ms;
-    cursor: pointer;
-    z-index: 20;
+  background: #fafafa;
+  color: #000;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  text-align: center;
+  width: 80px;
+  position: absolute;
+  top: 15px;
+  padding: 8px;
+  opacity: 0;
+  transition: ease 500ms;
+  cursor: pointer;
+  z-index: 20;
 }
 
 .instab-btn:visited {
-    color: #000;
+  color: #000;
 }
 
 .instab-btn:hover {
@@ -26,22 +26,32 @@
 }
 
 .instab-save {
-    right: 15px;
+  right: 15px;
 }
 
-.instab-open{
-    right: 125px;
+.instab-open {
+  right: 125px;
 }
 
-.instab-container:hover .instab-btn, article > div:hover .instab-btn {
-    opacity: 1;
-    transition: ease 500ms;
+.instab-container:hover .instab-btn,
+article > div:hover .instab-btn {
+  opacity: 1;
+  transition: ease 500ms;
 }
 
 .instab-navbar {
-    z-index: 100;
+  z-index: 100;
 }
 
 section.instab-container > .instab-btn {
-    display: none;
+  display: none;
+}
+
+.instab-container-stories .instab-btn {
+  top: 80px;
+}
+
+/* Hide buttons from previous/next stories on new IG layout */
+div > div > div > .instab-container-stories .instab-btn {
+  display: none;
 }

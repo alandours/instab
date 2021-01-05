@@ -1,3 +1,12 @@
+const addFeedObserver = () => {
+  const images = getLargeImages();
+
+  if (images.length) {
+    const feed = images[0].closest('article').parentNode;
+    instabObserver.observe(feed, { subtree: true, childList: true });
+  }
+};
+
 const init = (mutations) => {
   mutations.forEach((mutation) => {
     const { addedNodes } = mutation || {};
@@ -8,7 +17,7 @@ const init = (mutations) => {
 
       if (tagName === 'article' && !node.querySelector('.instab-btn')) {
           addInstab();
-          addPostsObserver();
+          addFeedObserver();
           bodyObserver.disconnect();
       }
     });
