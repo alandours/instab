@@ -21,6 +21,40 @@ const createSaveBtn = (source) => {
   return saveBtn;
 };
 
+const getVideoUrlFromScript = (poster) => {
+  const scripts = document.querySelectorAll('script');
+
+  if (!scripts || !scripts.length)
+    return '';
+
+  const scriptWithVideoData = [...scripts].find((sc) => {
+    return /video_url/.test(sc.innerHTML);
+  });
+
+  if (!scriptWithVideoData)
+    return '';
+
+  const scriptRegex = new RegExp(String.raw`window.__additionalDataLoaded\('${window.location.pathname}',(.+)\)`);
+  const scriptMatch = scriptWithVideoData.innerHTML.match(scriptRegex);
+  const scriptString = scriptMatch && scriptMatch[1];
+  const scriptData = scriptString && JSON.parse(String.raw`${scriptString}`);
+
+  const { video_url, edge_sidecar_to_children } = scriptData.graphql.shortcode_media || {};
+
+  if (video_url)
+    return video_url;
+
+  const { edges } = edge_sidecar_to_children || {};
+
+  const posterRegex = /\/([^\/]+jpg)/;
+  const posterMatch = poster.match(posterRegex);
+  const posterUrl = posterMatch && posterMatch[1];
+
+  const video = edges.find((edge) => edge.node.display_url.includes(posterUrl));
+
+  return video.node.video_url;
+};
+
 const addButtons = (media) => {
   for (let i = 0; i < media.length; i++) {
     let source = media[i].src;
@@ -28,6 +62,11 @@ const addButtons = (media) => {
     if (isStory()) {
       const srcset = media[i].srcset;
       source = srcset ? srcset.split(',')[0] : media[i].getElementsByTagName('source')[0].src; //For videos on stories
+    }
+      
+    if (isPostPage() && /blob/.test(media[i].src)) {
+      const videoUrl = getVideoUrlFromScript(media[i].poster);
+      source = videoUrl;
     }
 
     const mediaContainer = media[i].parentNode.parentNode;
@@ -55,10 +94,14 @@ const isLargerThan350 = (img) => {
   return width > 350;
 };
 
-const getLargeImages = () => {
-  const images = document.getElementsByTagName('img');
+const noVideoSiblings = (images) => {
+  return images.filter(img => !img.parentNode.querySelector('video'));
+};
 
-  return images.length ? [...images].filter(isLargerThan350) : [];
+const getLargeImages = () => {
+  const images = document.querySelectorAll('img');
+  const largerThan350 = images.length ? [...images].filter(isLargerThan350) : [];
+  return noVideoSiblings(largerThan350);
 };
 
 const addInstab = () => {
@@ -81,7 +124,7 @@ const handleClick = () => {
       clearInterval(interval);
     } else {
       instabId = new Date().getTime();
-  
+
       const instabContainer = document.querySelector(`.instab-container-${instabId}`);
       addInstab();
   
@@ -95,6 +138,7 @@ const handleClick = () => {
 
 const browser = chrome || browser;
 const isStory = () => /stories/.test(window.location.href);
+const isPostPage = () => /\/p\/.+/.test(window.location.pathname);
 let instabId = 0;
 
 const instabObserver = new MutationObserver(addInstab);
