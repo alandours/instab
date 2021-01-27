@@ -25,8 +25,13 @@
   background: #fff;
 }
 
-.instab-save {
+.instab-save,
+.instab-new-tab {
   right: 15px;
+}
+
+.instab-new-tab {
+  width: 400px;
 }
 
 .instab-open {

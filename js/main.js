@@ -21,38 +21,90 @@ const createSaveBtn = (source) => {
   return saveBtn;
 };
 
-const getVideoUrlFromScript = (poster) => {
-  const scripts = document.querySelectorAll('script');
+const createNewTabBtn = (mediaContainer) => {
+  const time = mediaContainer.closest('article').querySelector('time');
+  const timeUrl = time && time.parentNode && time.parentNode.href;
+  const url = window.location.pathname.includes('/p/') ? window.location.pathname : timeUrl;
 
-  if (!scripts || !scripts.length)
-    return '';
+  const newTabBtn = document.createElement('a');
+  newTabBtn.className = 'instab-btn instab-new-tab';
+  newTabBtn.innerHTML = 'Open post in a new tab to download or open this video';
+  newTabBtn.target = '_blank';
+  newTabBtn.href = url;
 
-  const scriptWithVideoData = [...scripts].find((sc) => {
+  return newTabBtn;
+};
+
+const getVideoDataScript = (scripts) => {
+  return [...scripts].find((sc) => {
     return /video_url/.test(sc.innerHTML);
   });
+};
 
-  if (!scriptWithVideoData)
-    return '';
+const getPosterImageName = (poster) => {
+  const regex = /\/([^\/]+jpg)/;
+  const match = poster.match(regex);
+  return match && match[1];
+};
 
-  const scriptRegex = new RegExp(String.raw`window.__additionalDataLoaded\('${window.location.pathname}',(.+)\)`);
-  const scriptMatch = scriptWithVideoData.innerHTML.match(scriptRegex);
-  const scriptString = scriptMatch && scriptMatch[1];
-  const scriptData = scriptString && JSON.parse(String.raw`${scriptString}`);
+const getScriptString = (videoDataScript) => {
+  const regex = new RegExp(String.raw`window.__additionalDataLoaded\('${window.location.pathname}',(.+)\)`);
+  const match = videoDataScript.innerHTML.match(regex);
+  return match && match[1];
+};
 
-  const { video_url, edge_sidecar_to_children } = scriptData.graphql.shortcode_media || {};
+const getSharedDataScriptString = (videoDataScript) => {
+  const regex = /window._sharedData = (.+);/
+  const match = videoDataScript.innerHTML.match(regex);
+  return match && match[1];
+};
 
-  if (video_url)
-    return video_url;
+const getVideoSrcFromScript = (poster) => {
+  const scripts = document.querySelectorAll('script');
 
-  const { edges } = edge_sidecar_to_children || {};
+  if (!scripts || !scripts.length) return '';
 
-  const posterRegex = /\/([^\/]+jpg)/;
-  const posterMatch = poster.match(posterRegex);
-  const posterUrl = posterMatch && posterMatch[1];
+  const videoDataScript = getVideoDataScript(scripts);
 
-  const video = edges.find((edge) => edge.node.display_url.includes(posterUrl));
+  if (!videoDataScript) return '';
 
-  return video.node.video_url;
+  const posterImageName = getPosterImageName(poster);
+  const scriptString = getScriptString(videoDataScript);
+
+  if (scriptString) {
+    const scriptData = JSON.parse(String.raw`${scriptString}`);
+
+    const { video_url, edge_sidecar_to_children } = scriptData.graphql.shortcode_media || {};
+
+    if (video_url)
+      return video_url;
+
+    const { edges } = edge_sidecar_to_children || {};
+
+    const video = edges.find((edge) => edge.node.display_url.includes(posterImageName));
+
+    return video.node.video_url;
+  }
+
+  const sharedDataScriptString = getSharedDataScriptString(videoDataScript);
+  const sharedData = sharedDataScriptString && JSON.parse(String.raw`${sharedDataScriptString}`);
+
+  const { edges } = sharedData.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media || {};
+
+  const video = edges.reduce((acc, edge) => {
+    if (edge.node.__typename === 'GraphVideo' && edge.node.display_url.includes(posterImageName)) {
+      return edge.node.video_url;
+    }
+    
+    if (edge.node.__typename === 'GraphSidecar') {
+      const video = edge.node.edge_sidecar_to_children.edges.find(e => e.node.display_url.includes(posterImageName));
+      if (video) return video.node.video_url;
+    }
+
+    return acc;
+  }, '');
+
+  return video;
 };
 
 const addButtons = (media) => {
@@ -64,8 +116,8 @@ const addButtons = (media) => {
       source = srcset ? srcset.split(',')[0] : media[i].getElementsByTagName('source')[0].src; //For videos on stories
     }
       
-    if (isPostPage() && /blob/.test(media[i].src)) {
-      const videoUrl = getVideoUrlFromScript(media[i].poster);
+    if (isBlob(media[i].src)) {
+      const videoUrl = getVideoSrcFromScript(media[i].poster);
       source = videoUrl;
     }
 
@@ -85,6 +137,14 @@ const addButtons = (media) => {
 
       mediaContainer.appendChild(openBtn);
       mediaContainer.appendChild(saveBtn);
+
+      const newTabBtn = mediaContainer.querySelector('.instab-new-tab');
+
+      if (newTabBtn)
+        mediaContainer.removeChild(newTabBtn);
+    } else if (!source && isVideo(media[i]) && !mediaContainer.querySelector('.instab-new-tab')) {
+      const newTabBtn = createNewTabBtn(mediaContainer);
+      mediaContainer.appendChild(newTabBtn);
     }
   }
 };
@@ -138,7 +198,9 @@ const handleClick = () => {
 
 const browser = chrome || browser;
 const isStory = () => /stories/.test(window.location.href);
-const isPostPage = () => /\/p\/.+/.test(window.location.pathname);
+const isBlob = (media) => /blob/.test(media);
+const isVideo = (media) => media.tagName.toLowerCase() === 'video';
+
 let instabId = 0;
 
 const instabObserver = new MutationObserver(addInstab);
