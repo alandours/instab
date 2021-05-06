@@ -1,35 +1,42 @@
-<link rel="stylesheet" type="text/css" href="../css/settings.css">
-<div class="instab-popup">
-  <div class="instab-popup__header">
-    <img src="../icons/ig-32.png" alt="Instab icon" />
-    <h1 class="instab-popup__title">Instab settings</h1>
-  </div>
-  <div class="instab-popup__settings">
-    <div class="instab-popup__field">
-      <label class="instab-popup__label">
-        <input
-          type="checkbox"
-          name="addUsername"
-          class="instab-popup__checkbox"
-          style="margin: 0; margin-right: 6px;"
-        >
-        Add username prefix
-      </label>
-      <span class="instab-popup__caption">Add username prefix to downloads</span>
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="../css/settings.css">
+  </head>
+  <body>
+    <div class="instab-popup">
+      <div class="instab-popup__header">
+        <img src="../icons/ig-32.png" alt="Instab icon" />
+        <h1 class="instab-popup__title">Instab settings</h1>
+      </div>
+      <div class="instab-popup__settings">
+        <div class="instab-popup__field">
+          <label class="instab-popup__label">
+            <input
+              type="checkbox"
+              name="addUsername"
+              class="instab-popup__checkbox"
+              style="margin: 0; margin-right: 6px;"
+            >
+            Add username prefix
+          </label>
+          <span class="instab-popup__caption">Add username prefix to downloads</span>
+        </div>
+        <div class="instab-popup__field instab-popup__field-separator instab-hide">
+          <label class="instab-popup__label">
+            Prefix separator
+            <input
+              type="text"
+              name="separator"
+              class="instab-popup__input-separator"
+              style="margin: 0; margin-right: 6px;"
+              value="_"
+            >
+          </label>
+          <span class="instab-popup__caption">Separator between the username and the filename</span>
+        </div>
+      </div>
     </div>
-    <div class="instab-popup__field instab-popup__field-separator instab-hide">
-      <label class="instab-popup__label">
-        Prefix separator
-        <input
-          type="text"
-          name="separator"
-          class="instab-popup__input-separator"
-          style="margin: 0; margin-right: 6px;"
-          value="_"
-        >
-      </label>
-      <span class="instab-popup__caption">Separator between the username and the filename</span>
-    </div>
-  </div>
-</div>
-<script src="../js/settings.js"></script>
+    <script src="../js/settings.js"></script>
+  </body>
+</html>

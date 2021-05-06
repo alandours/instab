@@ -1,4 +1,5 @@
 body {
+  font-family: sans-serif;
   margin: 0;
 }
 
@@ -55,9 +56,16 @@ input[type="text"] {
 .instab-popup__caption {
   color: #777;
   display: block;
+  font-size: 13px;
   margin-top: 4px;
 }
 
 .instab-hide {
   opacity: 0;
+}
+
+@-moz-document url-prefix() {
+  .instab-popup__label {
+    display: inline-block;
+  };
 }
