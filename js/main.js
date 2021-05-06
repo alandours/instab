@@ -8,14 +8,14 @@ const createOpenBtn = (source) => {
   return openBtn;
 };
 
-const createSaveBtn = (source) => {
+const createSaveBtn = (source, username) => {
   const saveBtn = document.createElement('a');
   saveBtn.className = 'instab-btn instab-save';
   saveBtn.innerHTML = 'Save';
 
   saveBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    browser.runtime.sendMessage(source);
+    browser.runtime.sendMessage({ url: source, username });
   });
 
   return saveBtn;
@@ -89,6 +89,8 @@ const getVideoSrcFromScript = (poster) => {
   const sharedDataScriptString = getSharedDataScriptString(videoDataScript);
   const sharedData = sharedDataScriptString && JSON.parse(String.raw`${sharedDataScriptString}`);
 
+  if (!sharedData) return;
+
   const { edges } = sharedData.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media || {};
 
   const video = edges.reduce((acc, edge) => {
@@ -105,6 +107,18 @@ const getVideoSrcFromScript = (poster) => {
   }, '');
 
   return video;
+};
+
+const getUsername = (media) => {
+  try {
+    const parentElement = isStory() ? 'section' : 'article';
+    const mediaParent = media.closest(parentElement);
+    const mediaHeaderLinks = mediaParent.querySelectorAll('header a');
+    const profileLink = [...mediaHeaderLinks].find(headerLink => !headerLink.querySelector('img'));
+    return profileLink.textContent;
+  } catch (e) {
+    return null;
+  }
 };
 
 const addButtons = (media) => {
@@ -132,8 +146,10 @@ const addButtons = (media) => {
       if (instabId !== 0)
         mediaContainer.classList.add(`instab-container-${instabId}`);
 
+      const username = getUsername(media[i]);
+
       const openBtn = createOpenBtn(source);
-      const saveBtn = createSaveBtn(source);
+      const saveBtn = createSaveBtn(source, username);
 
       mediaContainer.appendChild(openBtn);
       mediaContainer.appendChild(saveBtn);
