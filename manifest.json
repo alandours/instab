@@ -3,9 +3,8 @@
   "manifest_version": 2,
   "name": "Instab",
   "description": "Open and save Instagram photos, videos, stories and IGTV.",
-  "version": "1.5",
+  "version": "1.6",
   "permissions": [
-    "activeTab",
     "downloads",
     "storage"
   ],
