@@ -22,7 +22,8 @@ const createSaveBtn = (source, username) => {
 };
 
 const createNewTabBtn = (mediaContainer) => {
-  const time = mediaContainer.closest('article').querySelector('time');
+  const timeTags = mediaContainer.closest('article').querySelectorAll('time');
+  const time = timeTags.length > 1 ? timeTags[timeTags.length - 1] : timeTags[0];
   const url = time && time.closest('a') && time.closest('a').href;
 
   const newTabBtn = document.createElement('a');
