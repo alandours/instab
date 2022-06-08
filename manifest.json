@@ -3,7 +3,7 @@
   "manifest_version": 2,
   "name": "Instab",
   "description": "Open and save Instagram photos, videos, stories and IGTV.",
-  "version": "1.6",
+  "version": "1.7",
   "permissions": [
     "downloads",
     "storage"
@@ -28,13 +28,19 @@
       "css": ["css/instab.css"]
     },
     {
-      "matches": ["*://*.instagram.com/p/*"],
+      "matches": ["*://*.instagram.com/p/*", "*://*.instagram.com/*?instab=true", "*://*.instagram.com/*&instab=true"],
       "js": ["js/post.js"]
     },
     {
       "matches": ["*://*.instagram.com/*"],
       "exclude_globs": ["*instagram.com/p/*"],
       "js": ["js/feed.js"]
+    },
+    {
+      "run_at": "document_start",
+      "matches": ["*://*.instagram.com/*?instab=true", "*://*.instagram.com/*&instab=true"],
+      "js": ["js/userAgent.js"],
+      "css": ["css/videoTab.css"]
     }
   ]
 

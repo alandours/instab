@@ -10,7 +10,7 @@ a.instab-btn {
   width: 80px;
   position: absolute;
   top: 15px;
-  padding: 8px !important;;
+  padding: 8px !important;
   opacity: 0;
   transition: ease 500ms;
   cursor: pointer;
@@ -32,7 +32,7 @@ a.instab-new-tab {
 }
 
 a.instab-new-tab {
-  width: 400px;
+  width: 180px;
 }
 
 a.instab-open {

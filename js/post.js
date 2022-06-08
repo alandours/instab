@@ -1,8 +1,9 @@
 const postInterval = setInterval(() => {
   const instabBtn = document.querySelector('.instab-btn');
 
-  if (!instabBtn) {
-    addInstab();
+  if (instabBtn) {
     clearInterval(postInterval);
+  } else {
+    addInstab();
   }
-}, 250);
+}, 100);

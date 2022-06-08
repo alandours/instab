@@ -1,0 +1,26 @@
+body {
+  overflow: hidden !important;
+}
+
+main ~ *,
+article div + div {
+  display: none !important;
+}
+
+*:not(a.instab-btn) {
+  background: transparent !important;
+  border: 0 !important;
+  padding-top: 0 !important;
+}
+
+a.instab-btn {
+  opacity: 1;
+}
+
+.instab-container {
+  height: 600px;
+  left: calc(50% - 300px) !important;
+  position: absolute !important;
+  top: 80px !important;
+  width: 600px;
+}
