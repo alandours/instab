@@ -10,4 +10,4 @@
 
 ![Instab preview](https://addons.cdn.mozilla.net/user-media/previews/full/242/242068.png 'Instab preview')
 
-Open and save Instagram photos, videos and stories. Try it on [Firefox](https://addons.mozilla.org/firefox/addon/instab) or [Chrome](https://chrome.google.com/webstore/detail/instab/lgainibigpieikbapnhjkikfpapilcjb).
+Open and save Instagram photos, videos, stories and reels. Try it on [Firefox](https://addons.mozilla.org/firefox/addon/instab) or [Chrome](https://chrome.google.com/webstore/detail/instab/lgainibigpieikbapnhjkikfpapilcjb).
