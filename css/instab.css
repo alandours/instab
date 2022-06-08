@@ -1,6 +1,6 @@
-.instab-btn {
+a.instab-btn {
   background: #fafafa;
-  color: #000;
+  color: #000 !important;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.5);
   border-radius: 3px;
   font-family: inherit;
@@ -10,31 +10,32 @@
   width: 80px;
   position: absolute;
   top: 15px;
-  padding: 8px;
+  padding: 8px !important;;
   opacity: 0;
   transition: ease 500ms;
   cursor: pointer;
   z-index: 20;
 }
 
-.instab-btn:visited {
+a.instab-btn:visited {
   color: #000;
 }
 
-.instab-btn:hover {
+a.instab-btn:hover {
   background: #fff;
+  text-decoration: none !important;
 }
 
-.instab-save,
-.instab-new-tab {
+a.instab-save,
+a.instab-new-tab {
   right: 15px;
 }
 
-.instab-new-tab {
+a.instab-new-tab {
   width: 400px;
 }
 
-.instab-open {
+a.instab-open {
   right: 125px;
 }
 
