@@ -1,25 +1,28 @@
 {
 
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Instab",
   "description": "Open and save Instagram photos, videos, stories and reels.",
-  "version": "1.7.1",
+  "version": "1.8",
   "permissions": [
     "downloads",
     "storage"
+  ],
+  "host_permissions": [
+    "*://*.instagram.com/*"
   ],
   "icons": {
     "16": "icons/ig-16.png",
     "32": "icons/ig-32.png",
     "48": "icons/ig-48.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "icons/ig-48.png",
     "default_title": "Instab settings",
     "default_popup": "html/settings.html"
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
