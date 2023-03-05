@@ -22,9 +22,7 @@ const createSaveBtn = (source, username) => {
 };
 
 const createNewTabBtn = (mediaContainer) => {
-  const timeTags = mediaContainer.closest('article').querySelectorAll('time');
-  const time = timeTags.length > 1 ? timeTags[timeTags.length - 1] : timeTags[0];
-  const url = time && time.closest('a') && time.closest('a').href;
+  const url = getMediaUrl(mediaContainer)
 
   const newTabBtn = document.createElement('a');
   newTabBtn.className = 'instab-btn instab-new-tab';
@@ -34,6 +32,17 @@ const createNewTabBtn = (mediaContainer) => {
 
   return newTabBtn;
 };
+
+const getMediaUrl = (mediaContainer) => {
+  const mediaLinks = mediaContainer.closest('article').querySelectorAll('a');
+
+  const mediaId = [...mediaLinks].reduce((acc, link) => {
+    const match = link.href.match(/\/p\/([\w\d]+)\//)
+    return match ? match[1] : ''
+  }, '')
+
+  return `/p/${mediaId}`
+}
 
 const getUsername = (media) => {
   try {
