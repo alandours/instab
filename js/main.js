@@ -110,11 +110,16 @@ const getLargeImages = () => {
   return noVideoSiblings(largerThan350);
 };
 
-const addInstab = () => {
+const addInstab = (isPost = false) => {
   const images = getLargeImages();
   const videos = document.getElementsByTagName('video');
 
-  if (videos.length) addButtons(videos);
+  if (videos.length) {
+    addButtons(videos);
+
+    if (isPost) return
+  }
+
   if (images.length) addButtons(images);
 };
 

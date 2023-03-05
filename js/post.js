@@ -4,6 +4,6 @@ const postInterval = setInterval(() => {
   if (instabBtn) {
     clearInterval(postInterval);
   } else {
-    addInstab();
+    addInstab(true);
   }
 }, 100);
