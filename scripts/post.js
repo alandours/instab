@@ -1,9 +1,1 @@
-const postInterval = setInterval(() => {
-  const instabBtn = document.querySelector('.instab-btn');
-
-  if (instabBtn) {
-    clearInterval(postInterval);
-  } else {
-    addInstab();
-  }
-}, 100);
+instabObserver.observe(document.body, { subtree: true, childList: true });
