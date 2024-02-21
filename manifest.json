@@ -1,5 +1,4 @@
 {
-
   "manifest_version": 3,
   "name": "Instab",
   "description": "Open and save Instagram photos, videos, stories and reels.",
@@ -31,22 +30,13 @@
       "css": ["css/instab.css"]
     },
     {
-      "matches": ["*://*.instagram.com/p/*", "*://*.instagram.com/*?instab=true", "*://*.instagram.com/*&instab=true"],
+      "matches": ["*://*.instagram.com/p/*"],
       "js": ["js/post.js"]
     },
     {
       "matches": ["*://*.instagram.com/*"],
       "exclude_globs": ["*instagram.com/p/*"],
       "js": ["js/feed.js"]
-    },
-    {
-      "run_at": "document_start",
-      "matches": ["*://*.instagram.com/*?instab=true", "*://*.instagram.com/*&instab=true"],
-      "js": ["js/userAgent.js"],
-      "css": ["css/videoTab.css"]
     }
   ]
-
 }
-
-
