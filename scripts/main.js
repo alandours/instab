@@ -31,9 +31,9 @@ const getUsername = (media) => {
   try {
     const parentElement = isStory() ? 'section' : 'article';
     const mediaParent = media.closest(parentElement);
-    const mediaHeaderLinks = mediaParent.querySelectorAll('header a');
-    const profileLink = [...mediaHeaderLinks].find(headerLink => !headerLink.querySelector('img'));
-    return profileLink.textContent;
+    const mediaLinks = mediaParent.querySelectorAll('a');
+    const profileLinks = [...mediaLinks].filter(link => /^(.+instagram\.com)?\/[^\/]+\/?$/.test(link.href))
+    return profileLinks[0].textContent;
   } catch (e) {
     return null;
   }
@@ -86,9 +86,7 @@ const getLargeImages = () => {
 };
 
 const addInstab = () => {
-  debug('addInstab FUNCTION');
-  const large = getLargeImages();
-  addButtons(large);
+  addButtons(getLargeImages());
 };
 
 const handleClick = () => {
