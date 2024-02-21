@@ -21,20 +21,6 @@ const createSaveBtn = (source, username) => {
   return saveBtn;
 };
 
-const createNewTabBtn = (mediaContainer) => {
-  const timeTags = mediaContainer.closest('article').querySelectorAll('time');
-  const time = timeTags.length > 1 ? timeTags[timeTags.length - 1] : timeTags[0];
-  const url = time && time.closest('a') && time.closest('a').href;
-
-  const newTabBtn = document.createElement('a');
-  newTabBtn.className = 'instab-btn instab-new-tab';
-  newTabBtn.innerHTML = 'Open video in a new tab';
-  newTabBtn.target = '_blank';
-  newTabBtn.href = `${url}?instab=true`;
-
-  return newTabBtn;
-};
-
 const getUsername = (media) => {
   try {
     const parentElement = isStory() ? 'section' : 'article';
@@ -48,42 +34,38 @@ const getUsername = (media) => {
 };
 
 const addButtons = (media) => {
-  for (let i = 0; i < media.length; i++) {
-    let source = isBlob(media[i].src) ? null : media[i].src;
+  if (!media.length) return;
+
+  media.forEach((element) => {
+    let source = isBlob(element.src) ? null : element.src;
 
     if (isStory()) {
-      const srcset = media[i].srcset;
-      source = srcset ? srcset.split(',')[0] : media[i].getElementsByTagName('source')[0].src; //For videos on stories
+      const srcset = element.srcset;
+      source = srcset ? srcset.split(',')[0] : element.getElementsByTagName('source')[0].src; //For videos on stories
     }
 
-    const mediaContainer = media[i].parentNode.parentNode;
+    const mediaContainer = element.parentNode.parentNode;
 
     if (source && !mediaContainer.classList.contains('instab-container')) {
       mediaContainer.classList.add('instab-container');
 
-      if (isStory())
+      if (isStory()) {
         mediaContainer.classList.add('instab-container-stories');
+      }
 
-      if (instabId !== 0)
+      if (instabId !== 0) {
         mediaContainer.classList.add(`instab-container-${instabId}`);
+      }
 
-      const username = getUsername(media[i]);
+      const username = getUsername(element);
 
       const openBtn = createOpenBtn(source);
       const saveBtn = createSaveBtn(source, username);
 
       mediaContainer.appendChild(openBtn);
       mediaContainer.appendChild(saveBtn);
-
-      const newTabBtn = mediaContainer.querySelector('.instab-new-tab');
-
-      if (newTabBtn)
-        mediaContainer.removeChild(newTabBtn);
-    } else if (!source && isVideo(media[i]) && !mediaContainer.querySelector('.instab-new-tab')) {
-      const newTabBtn = createNewTabBtn(mediaContainer);
-      mediaContainer.appendChild(newTabBtn);
     }
-  }
+  })
 };
 
 const isLargerThan350 = (img) => {
@@ -91,22 +73,18 @@ const isLargerThan350 = (img) => {
   return width > 350;
 };
 
-const noVideoSiblings = (images) => {
-  return images.filter(img => !img.parentNode.querySelector('video'));
+const isVideoPoster = (img) => {
+  return !!img.closest('article').querySelector('video');
 };
 
 const getLargeImages = () => {
   const images = document.querySelectorAll('img');
-  const largerThan350 = images.length ? [...images].filter(isLargerThan350) : [];
-  return noVideoSiblings(largerThan350);
+  const filteredImages = images.length ? [...images].filter(img => img && isLargerThan350(img) && !isVideoPoster(img)) : [];
+  return filteredImages;
 };
 
 const addInstab = () => {
-  const images = getLargeImages();
-  const videos = document.getElementsByTagName('video');
-
-  if (videos.length) addButtons(videos);
-  if (images.length) addButtons(images);
+  addButtons(getLargeImages());
 };
 
 const handleClick = () => {
@@ -134,6 +112,7 @@ const handleClick = () => {
 }
 
 const browser = chrome || browser;
+
 const isStory = () => /stories/.test(window.location.href);
 const isBlob = (media) => /blob/.test(media);
 const isVideo = (media) => media.tagName.toLowerCase() === 'video';
@@ -145,9 +124,3 @@ const instabObserver = new MutationObserver(addInstab);
 document.body.addEventListener('click', () => {
   handleClick();
 });
-
-const navbar = document.getElementsByTagName('nav');
-
-for (let i = 0; i < navbar.length; i++) {
-  navbar[i].classList.add('instab-navbar');
-}
