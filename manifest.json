@@ -18,7 +18,7 @@
   "action": {
     "default_icon": "icons/ig-48.png",
     "default_title": "Instab settings",
-    "default_popup": "html/settings.html"
+    "default_popup": "settings/settings.html"
   },
   "background": {
     "service_worker": "background.js"
@@ -26,17 +26,17 @@
   "content_scripts": [
     {
       "matches": ["*://*.instagram.com/*"],
-      "js": ["js/main.js"],
-      "css": ["css/instab.css"]
+      "js": ["scripts/main.js"],
+      "css": ["styles/instab.css"]
     },
     {
       "matches": ["*://*.instagram.com/p/*"],
-      "js": ["js/post.js"]
+      "js": ["scripts/post.js"]
     },
     {
       "matches": ["*://*.instagram.com/*"],
       "exclude_globs": ["*instagram.com/p/*"],
-      "js": ["js/feed.js"]
+      "js": ["scripts/feed.js"]
     }
   ]
 }
