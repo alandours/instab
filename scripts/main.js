@@ -1,3 +1,5 @@
+const debug = (...params) => console.log('Instab: ', params);
+
 const createOpenBtn = (source) => {
   const openBtn = document.createElement('a');
   openBtn.className = 'instab-btn instab-open';
