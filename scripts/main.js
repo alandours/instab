@@ -7,6 +7,10 @@ const createOpenBtn = (source) => {
   openBtn.target = '_blank';
   openBtn.href = source;
 
+  openBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
   return openBtn;
 };
 
@@ -55,9 +59,9 @@ const addButtons = (media) => {
         mediaContainer.classList.add('instab-container-stories');
       }
 
-      if (instabId !== 0) {
-        mediaContainer.classList.add(`instab-container-${instabId}`);
-      }
+      // if (instabId !== 0) {
+      //   mediaContainer.classList.add(`instab-container-${instabId}`);
+      // }
 
       const username = getUsername(element);
 
@@ -76,7 +80,7 @@ const isLargerThan350 = (img) => {
 };
 
 const isVideoPoster = (img) => {
-  return !!img.closest('article').querySelector('video');
+  return !!img?.closest('article')?.querySelector('video');
 };
 
 const getLargeImages = () => {
@@ -86,32 +90,33 @@ const getLargeImages = () => {
 };
 
 const addInstab = () => {
-  addButtons(getLargeImages());
+  const large = getLargeImages();
+  addButtons(large);
 };
 
-const handleClick = () => {
-  let tries = 0;
+// const handleClick = () => {
+//   let tries = 0;
 
-  const interval = setInterval(() => {
-    tries++;
+//   const interval = setInterval(() => {
+//     tries++;
 
-    if (isStory()) {
-      addInstab();
-      instabObserver.observe(document.body, { subtree: true, childList: true });
-      clearInterval(interval);
-    } else {
-      instabId = new Date().getTime();
+//     if (isStory()) {
+//       addInstab();
+//       instabObserver.observe(document.body, { subtree: true, childList: true });
+//       clearInterval(interval);
+//     } else {
+//       instabId = new Date().getTime();
 
-      const instabContainer = document.querySelector(`.instab-container-${instabId}`);
-      addInstab();
+//       const instabContainer = document.querySelector(`.instab-container-${instabId}`);
+//       addInstab();
   
-      if (instabContainer || tries > 15) {
-        clearInterval(interval);
-        instabId = 0;
-      }
-    }
-  }, 300);
-}
+//       if (instabContainer || tries > 15) {
+//         clearInterval(interval);
+//         instabId = 0;
+//       }
+//     }
+//   }, 300);
+// }
 
 const browser = chrome || browser;
 
@@ -119,10 +124,10 @@ const isStory = () => /stories/.test(window.location.href);
 const isBlob = (media) => /blob/.test(media);
 const isVideo = (media) => media.tagName.toLowerCase() === 'video';
 
-let instabId = 0;
+// let instabId = 0;
 
 const instabObserver = new MutationObserver(addInstab);
 
-document.body.addEventListener('click', () => {
-  handleClick();
-});
+// document.body.addEventListener('click', () => {
+//   handleClick();
+// });
