@@ -127,7 +127,17 @@ const getLargeImages = () => {
  * Adds Instab buttons to large images
  */
 const addInstab = () => {
-  addButtons(getLargeImages());
+  let intervals = 0;
+
+  const addInterval = setInterval(() => {
+    addButtons(getLargeImages());
+
+    if (intervals >= 3) {
+      clearInterval(addInterval)
+    }
+
+    intervals++
+  }, 250)
 };
 
 const instabObserver = new MutationObserver(addInstab);
