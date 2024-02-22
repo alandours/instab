@@ -100,7 +100,7 @@ const addButtons = (media) => {
  * @returns {boolean}
  */
 const isLargerThan350 = (image) => {
-  const { width } = isStory() ? img.getBoundingClientRect() : image;
+  const { width } = isStory() ? image.getBoundingClientRect() : image;
   return width > 350;
 };
 
