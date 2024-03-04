@@ -1,49 +1,42 @@
 {
-
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Instab",
   "description": "Open and save Instagram photos, videos, stories and reels.",
-  "version": "1.7.1",
+  "version": "2.0.0",
   "permissions": [
     "downloads",
     "storage"
+  ],
+  "host_permissions": [
+    "*://*.instagram.com/*"
   ],
   "icons": {
     "16": "icons/ig-16.png",
     "32": "icons/ig-32.png",
     "48": "icons/ig-48.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "icons/ig-48.png",
     "default_title": "Instab settings",
-    "default_popup": "html/settings.html"
+    "default_popup": "settings/settings.html"
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": ["*://*.instagram.com/*"],
-      "js": ["js/main.js"],
-      "css": ["css/instab.css"]
+      "js": ["scripts/main.js"],
+      "css": ["styles/instab.css"]
     },
     {
-      "matches": ["*://*.instagram.com/p/*", "*://*.instagram.com/*?instab=true", "*://*.instagram.com/*&instab=true"],
-      "js": ["js/post.js"]
+      "matches": ["*://*.instagram.com/p/*"],
+      "js": ["scripts/post.js"]
     },
     {
       "matches": ["*://*.instagram.com/*"],
       "exclude_globs": ["*instagram.com/p/*"],
-      "js": ["js/feed.js"]
-    },
-    {
-      "run_at": "document_start",
-      "matches": ["*://*.instagram.com/*?instab=true", "*://*.instagram.com/*&instab=true"],
-      "js": ["js/userAgent.js"],
-      "css": ["css/videoTab.css"]
+      "js": ["scripts/feed.js"]
     }
   ]
-
 }
-
-

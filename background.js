@@ -32,6 +32,7 @@ const getFilename = (url, username) => {
 const downloadMedia = ({ url, username }) => {
   const filename = getFilename(url, username);
 
+  // Works only by turning off "Ask where to save each file before downloading" in chrome://settings/downloads
   browser.downloads.download({
     url: url,
     ...(filename && { filename })

@@ -1,0 +1,1 @@
+instabObserver.observe(document.body, { subtree: true, childList: true });

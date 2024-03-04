@@ -26,13 +26,8 @@ a.instab-btn:hover {
   text-decoration: none !important;
 }
 
-a.instab-save,
-a.instab-new-tab {
+a.instab-save {
   right: 15px;
-}
-
-a.instab-new-tab {
-  width: 180px;
 }
 
 a.instab-open {
@@ -43,10 +38,6 @@ a.instab-open {
 article > div:hover .instab-btn {
   opacity: 1;
   transition: ease 500ms;
-}
-
-.instab-navbar {
-  z-index: 100;
 }
 
 section.instab-container > .instab-btn {
