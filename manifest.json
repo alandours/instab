@@ -3,6 +3,11 @@
   "name": "Instab",
   "description": "Open and save Instagram photos",
   "version": "2.0.0",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{0de715bd-3ed0-4288-bb5e-cfcbce2bbe72}"
+    }
+  },
   "permissions": [
     "downloads",
     "storage"
@@ -21,7 +26,8 @@
     "default_popup": "settings/settings.html"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
